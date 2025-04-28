@@ -429,3 +429,70 @@ class LEDMatrix:
     
     def __str__(self) -> str:
         return f"LEDMatrix({self.rows}x{self.cols}, {len(self.leds)} LEDs)"
+
+
+class LEDManager:
+    """A simple LED manager that provides basic LED control functionality"""
+    
+    def __init__(self, hardware):
+        """
+        Initialize the LED manager
+        
+        Args:
+            hardware: Hardware controller object (PCA9685 or mock)
+        """
+        self.hardware = hardware
+        self.leds = {}  # Dictionary to store LED objects by ID
+        self._next_led_id = 0
+        
+    @property
+    def num_leds(self) -> int:
+        """Get the number of LEDs being managed"""
+        return len(self.leds)
+    
+    def set_led(self, led_id: int, brightness: float):
+        """
+        Set the brightness of an LED
+        
+        Args:
+            led_id: ID of the LED to control
+            brightness: Brightness level from 0.0 (off) to 1.0 (full brightness)
+        """
+        # Clamp brightness between 0 and 1
+        brightness = max(0.0, min(1.0, brightness))
+        
+        # Convert to 0-100 scale for LED class
+        brightness_percent = int(brightness * 100)
+        
+        # Get or create LED object
+        if led_id not in self.leds:
+            self.leds[led_id] = LED(led_id, self.hardware, led_id % 16)
+        
+        # Set brightness
+        self.leds[led_id].brightness = brightness_percent
+    
+    def get_led_state(self, led_id: int) -> float:
+        """
+        Get the current brightness of an LED
+        
+        Args:
+            led_id: ID of the LED to check
+            
+        Returns:
+            Current brightness level from 0.0 to 1.0
+        """
+        if led_id not in self.leds:
+            return 0.0
+        
+        # Convert from 0-100 scale back to 0-1
+        return self.leds[led_id].brightness / 100.0
+    
+    def all_off(self):
+        """Turn all LEDs off"""
+        for led in self.leds.values():
+            led.off()
+    
+    def all_on(self, brightness: float = 1.0):
+        """Turn all LEDs on at specified brightness"""
+        for led in self.leds.values():
+            self.set_led(led.led_id, brightness)
