@@ -24,19 +24,16 @@ class LEDTestRunner:
 def main():
     parser = argparse.ArgumentParser(description='Run LED tests')
     parser.add_argument('--leds', nargs='+', type=int, help='LED IDs to test')
-    parser.add_argument('--tests',choices=['on_off', 'fade'], help='Tests to run')
+    parser.add_argument('--tests', nargs='+', choices=['on_off', 'fade'], help='Tests to run')
     args = parser.parse_args()
     
-    # if not args.leds:
-    #     print("Please specify at least one LED ID to test")
-    #     return
+    if not args.leds:
+        print("Please specify at least one LED ID to test")
+        return
         
-    # if not args.tests:
-    #     print("Please specify at least one test to run")
-    #     return
-
-    args.leds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    args.tests = 'fade'
+    if not args.tests:
+        print("Please specify at least one test to run")
+        return
 
         
     runner = LEDTestRunner()

@@ -28,22 +28,22 @@ class BaseLEDTest(unittest.TestCase):
             self.led_manager.set_led(led_id, brightness)
             time.sleep(step_duration)
             
-    def test_led_on_off(self, led_id):
+    def test_led_on_off(self):
         """Test basic on/off functionality for an LED"""
         # Test turning on
-        self.led_manager.set_led(led_id, 1.0)
-        self.assert_led_state(led_id, 1.0)
+        self.led_manager.set_led(self.led_id, 1.0)
+        self.assert_led_state(self.led_id, 1.0)
         
         # Test turning off
-        self.led_manager.set_led(led_id, 0.0)
-        self.assert_led_state(led_id, 0.0)
+        self.led_manager.set_led(self.led_id, 0.0)
+        self.assert_led_state(self.led_id, 0.0)
         
-    def test_led_fade(self, led_id):
+    def test_led_fade(self):
         """Test fading functionality for an LED"""
         # Test fade in
-        self.fade_led(led_id, 0.0, 1.0, duration=0.5)
-        self.assert_led_state(led_id, 1.0)
+        self.fade_led(self.led_id, 0.0, 1.0, duration=0.5)
+        self.assert_led_state(self.led_id, 1.0)
         
         # Test fade out
-        self.fade_led(led_id, 1.0, 0.0, duration=0.5)
-        self.assert_led_state(led_id, 0.0) 
+        self.fade_led(self.led_id, 1.0, 0.0, duration=0.5)
+        self.assert_led_state(self.led_id, 0.0) 
